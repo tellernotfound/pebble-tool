@@ -13,15 +13,16 @@ from pebble_tool.sdk import sdk_version
 from . import pebble_platforms
 
 
-class PebbleProject(object):
-    def __new__(cls, project_dir=None):
-        if project_dir is None:
-            project_dir = os.getcwd()
-        if NpmProject.should_process(project_dir):
-            return NpmProject(project_dir)
-        else:
-            return AppinfoProject(project_dir)
+def PebbleProject(project_dir=None):
+    if project_dir is None:
+        project_dir = os.getcwd()
+    if NpmProject.should_process(project_dir):
+        return NpmProject(project_dir)
+    else:
+        return AppinfoProject(project_dir)
 
+
+class PebbleProjectBase(object):
     def __init__(self, project_dir=None):
         if project_dir is None:
             project_dir = os.getcwd()
@@ -69,10 +70,7 @@ class PebbleProject(object):
             AppinfoProject.check_project_directory(project_dir)
 
 
-class AppinfoProject(PebbleProject):
-    def __new__(cls, *args, **kwargs):
-        return object.__new__(cls, *args, **kwargs)
-
+class AppinfoProject(PebbleProjectBase):
     @staticmethod
     def check_project_directory(project_dir):
         """Check to see if the current directory matches what is created by PblProjectCreator.run.
@@ -120,10 +118,7 @@ class AppinfoProject(PebbleProject):
         self.is_shown_only_on_communication = watchapp.get('onlyShownOnCommunication', False)
 
 
-class NpmProject(PebbleProject):
-    def __new__(cls, *args, **kwargs):
-        return object.__new__(cls, *args, **kwargs)
-
+class NpmProject(PebbleProjectBase):
     @staticmethod
     def check_project_directory(project_dir):
         """Check to see if the current directory matches what is created by PblProjectCreator.run.
@@ -192,7 +187,7 @@ class NpmProject(PebbleProject):
 
 
 def check_current_directory():
-    return PebbleProject.check_project_directory(os.getcwd())
+    return PebbleProjectBase.check_project_directory(os.getcwd())
 
 
 def requires_project_dir(func):

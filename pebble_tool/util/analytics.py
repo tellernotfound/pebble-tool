@@ -106,8 +106,9 @@ class PebbleAnalytics(threading.Thread):
             'json': json.dumps(td_obj)
         }
         if force:
-            requests.post(self.TD_SERVER, data=fields)
-            logger.debug("Synchronously transmitting analytics data: {}".format(analytics))
+            logger.debug("Forced analytics transmission is disabled.")
+            # requests.post(self.TD_SERVER, data=fields)
+            # logger.debug("Synchronously transmitting analytics data: {}".format(analytics))
         else:
             logger.debug("Queueing analytics data: {}".format(analytics))
             self._enqueue(fields)
@@ -122,10 +123,12 @@ class PebbleAnalytics(threading.Thread):
             json.dump(list(self.pending), f)
 
     def _should_track(self):
+        # Analytics tracking is permanently disabled because the endpoint is missing.
+        return False
         # Should we track analytics?
-        permission_file = os.path.join(self.get_option_dir(), "ENABLE_ANALYTICS")
-        if not os.path.exists(permission_file):
-            return False
+        # permission_file = os.path.join(self.get_option_dir(), "ENABLE_ANALYTICS")
+        # if not os.path.exists(permission_file):
+        #     return False
 
         # Don't track if internet connection is down
         try:
@@ -218,28 +221,29 @@ def wait_for_analytics(timeout):
 
 
 def analytics_prompt():
-    path = PebbleAnalytics.get_option_dir()
-    if (not os.path.exists(os.path.join(path, "ENABLE_ANALYTICS"))
-            and not os.path.exists(os.path.join(path, "NO_TRACKING"))):
-        print("Pebble collects metrics on your usage of our developer tools.")
-        print("We use this information to help prioritise further development of our tooling.")
-        print()
-        print("If you cannot respond interactively, create a file called ENABLE_ANALYTICS or")
-        print("NO_TRACKING in '{}/'.".format(path))
-        print()
-        while True:
-            result = input("Would you like to opt in to this collection? [y/n] ")
-            try:
-                can_collect = strtobool(result)
-            except ValueError:
-                print("Please respond with either 'yes' or 'no'.")
-            else:
-                if can_collect:
-                    with open(os.path.join(path, "ENABLE_ANALYTICS"), 'w') as f:
-                        f.write('yay!')
-                else:
-                    logger.debug("Logging opt-out.")
-                    post_event("sdk_analytics_opt_out", force=True)
-                    with open(os.path.join(path, "NO_TRACKING"), 'w') as f:
-                        f.write('aww.')
-                break
+    pass
+    # path = PebbleAnalytics.get_option_dir()
+    # if (not os.path.exists(os.path.join(path, "ENABLE_ANALYTICS"))
+    #         and not os.path.exists(os.path.join(path, "NO_TRACKING"))):
+    #     print("Pebble collects metrics on your usage of our developer tools.")
+    #     print("We use this information to help prioritise further development of our tooling.")
+    #     print()
+    #     print("If you cannot respond interactively, create a file called ENABLE_ANALYTICS or")
+    #     print("NO_TRACKING in '{}/'.".format(path))
+    #     print()
+    #     while True:
+    #         result = input("Would you like to opt in to this collection? [y/n] ")
+    #         try:
+    #             can_collect = strtobool(result)
+    #         except ValueError:
+    #             print("Please respond with either 'yes' or 'no'.")
+    #         else:
+    #             if can_collect:
+    #                 with open(os.path.join(path, "ENABLE_ANALYTICS"), 'w') as f:
+    #                     f.write('yay!')
+    #             else:
+    #                 logger.debug("Logging opt-out.")
+    #                 post_event("sdk_analytics_opt_out", force=True)
+    #                 with open(os.path.join(path, "NO_TRACKING"), 'w') as f:
+    #                     f.write('aww.')
+    #             break

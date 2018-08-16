@@ -9,6 +9,7 @@ import os
 from progressbar import ProgressBar, Percentage, Bar, FileTransferSpeed, Timer
 import requests
 import shutil
+from six.moves import input
 import subprocess
 import sys
 import tempfile
@@ -25,7 +26,7 @@ pebble_platforms = ('aplite', 'basalt', 'chalk', 'diorite', 'emery')
 
 
 class SDKManager(object):
-    DOWNLOAD_SERVER = "https://sdk.getpebble.com"
+    DOWNLOAD_SERVER = "https://sdk.rebble.io"
 
     def __init__(self, sdk_dir=None):
         self.sdk_dir = os.path.normpath(sdk_dir or os.path.join(get_persist_dir(), "SDKs"))
@@ -155,16 +156,16 @@ class SDKManager(object):
         prompt = """To use the Pebble SDK, you must agree to the following:
 
 PEBBLE TERMS OF USE
-https://developer.getpebble.com/legal/terms-of-use
+https://developer.rebble.io/developer.getpebble.com/legal/terms-of-use/index.html
 
 PEBBLE DEVELOPER LICENSE
-https://developer.getpebble.com/legal/sdk-license
+https://developer.rebble.io/developer.getpebble.com/legal/sdk-license/index.html
 """
         print(prompt)
         result = False
         while True:
             try:
-                result = strtobool(raw_input("Do you accept the Pebble Terms of Use and the "
+                result = strtobool(input("Do you accept the Pebble Terms of Use and the "
                                              "Pebble Developer License? (y/n) "))
             except ValueError:
                 pass
