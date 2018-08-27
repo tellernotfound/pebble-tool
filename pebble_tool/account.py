@@ -13,18 +13,18 @@ import oauth2client.tools as tools
 
 from pebble_tool.util import get_persist_dir
 
-AUTH_SERVER   = os.getenv("PEBBLE_OAUTH_SERVER", "https://auth.getpebble.com")
-AUTHORIZE_URI = AUTH_SERVER + "/oauth/authorize"
+AUTH_SERVER   = os.getenv("PEBBLE_OAUTH_SERVER", "https://auth.rebble.io")
+AUTHORIZE_URI = AUTH_SERVER + "/oauth/authorise"
 TOKEN_URI     = AUTH_SERVER + "/oauth/token"
-ME_URI        = AUTH_SERVER + "/api/v1/me.json"
+ME_URI        = AUTH_SERVER + "/api/v1/me"
 
-SDK_CLIENT_ID     = os.getenv("PEBBLE_OAUTH_APP_ID", "8b9140c7b1f101a84a26cab03e6b12273af36829d0e6540394dae61196fe5e7b")
-SDK_CLIENT_SECRET = os.getenv("PEBBLE_OAUTH_APP_SECRET", "8fdcbceafcbca6f9fdb6432cfcc246180bb59bcea957795b12efb5527397e2a1")
+SDK_CLIENT_ID     = os.getenv("PEBBLE_OAUTH_APP_ID", "b576399e9d1fdaa8e666a4dffbbdd1")
+SDK_CLIENT_SECRET = os.getenv("PEBBLE_OAUTH_APP_SECRET", "DaJt7qHRAxmZ4E-ZTYWm4M04GKBZ363GZgPS0kdj3qg")
 
 flow = OAuth2WebServerFlow(
     client_id=SDK_CLIENT_ID,
     client_secret=SDK_CLIENT_SECRET,
-    scope="public",
+    scope="profile",
     auth_uri=AUTHORIZE_URI,
     token_uri=TOKEN_URI
 )
@@ -118,11 +118,10 @@ class Account(object):
                 result.raise_for_status()
                 account_info = result.json()
                 stored_info = {
-                    'id': account_info['id'],
+                    'id': account_info['uid'],
                     'name': account_info['name'],
-                    'email': account_info['email'],
-                    'roles': account_info['roles'],
-                    'legacy_id': account_info.get('legacy_id', None)
+                    'roles': account_info['scopes'],
+                    'legacy_id': None
                 }
                 json.dump(stored_info, f)
                 self._user_info = stored_info
