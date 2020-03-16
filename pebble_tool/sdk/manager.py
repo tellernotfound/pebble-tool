@@ -114,7 +114,7 @@ class SDKManager(object):
                 t.extractall(path)
             virtualenv_path = os.path.join(path, ".env")
             print("Preparing virtualenv... (this may take a while)")
-            subprocess.check_call([sys.executable, "-m", "virtualenv", virtualenv_path, "--no-site-packages"])
+            subprocess.check_call([sys.executable, "-m", "virtualenv", virtualenv_path])
             print("Installing dependencies...")
             subprocess.check_call([os.path.join(virtualenv_path, "bin", "python"), "-m", "pip", "install", "-r",
                                    os.path.join(path, "sdk-core", "requirements.txt")],
