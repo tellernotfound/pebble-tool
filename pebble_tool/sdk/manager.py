@@ -114,7 +114,7 @@ class SDKManager(object):
                 t.extractall(path)
             virtualenv_path = os.path.join(path, ".env")
             print("Preparing virtualenv... (this may take a while)")
-            subprocess.check_call([sys.executable, "-m", "virtualenv", virtualenv_path, "--no-site-packages"])
+            subprocess.check_call([sys.executable, "-m", "virtualenv", virtualenv_path])
             print("Installing dependencies...")
             subprocess.check_call([os.path.join(virtualenv_path, "bin", "python"), "-m", "pip", "install", "-r",
                                    os.path.join(path, "sdk-core", "requirements.txt")],
@@ -241,7 +241,7 @@ subprocess.call([sys.executable, {}] + sys.argv[1:])
             os.symlink(os.path.join(build_path, 'qemu_spi_flash.bin'),
                        os.path.join(pebble_path, platform, 'qemu', 'qemu_spi_flash.bin'))
 
-        os.symlink(os.path.join(sdk_path, 'common/'), 
+        os.symlink(os.path.join(sdk_path, 'common/'),
                    os.path.join(pebble_path, 'common'))
 
         with open(os.path.join(dest_path, 'manifest.json'), 'w') as f:
@@ -253,7 +253,7 @@ subprocess.call([sys.executable, {}] + sys.argv[1:])
             }, f)
 
         print("Preparing virtualenv... (this may take a while)")
-        subprocess.check_call([sys.executable, "-m", "virtualenv", env_path, "--no-site-packages"])
+        subprocess.check_call([sys.executable, "-m", "virtualenv", env_path])
         print("Installing dependencies...")
         print("This may fail installing Pillow==2.0.0. In that case, question why we still force 2.0.0 anyway.")
         if sys.platform.startswith('darwin'):
