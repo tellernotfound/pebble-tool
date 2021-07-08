@@ -6,6 +6,7 @@ import argparse
 import logging
 import sys
 import requests.packages.urllib3 as urllib3
+from six import text_type
 
 from .exceptions import ToolError
 from .sdk import sdk_version
@@ -43,7 +44,7 @@ def run_tool(args=None):
     try:
         args.func(args)
     except ToolError as e:
-        parser.exit(message=unicode(e)+"\n", status=1)
+        parser.exit(message=text_type(e)+"\n", status=1)
         sys.exit(1)
 
 

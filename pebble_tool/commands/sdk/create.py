@@ -8,6 +8,7 @@ import re
 import shutil
 from string import Template
 from uuid import uuid4
+from six import iteritems, string_types
 
 from . import SDKCommand
 from pebble_tool.sdk import SDK_VERSION, sdk_version
@@ -88,13 +89,13 @@ def _copy_from_template(template, template_root, path, options):
         """
         copied_files = 0
 
-        for dest, origins in group.iteritems():
+        for dest, origins in iteritems(group):
             target_path = os.path.join(substitute(project_root), dest)
             if origins is None:
                 _mkdirs(target_path)
                 continue
 
-            if isinstance(origins, basestring):
+            if isinstance(origins, string_types):
                 origins = [origins]
 
             origin_path = extant_path(os.path.join(template_root, x) for x in origins)
